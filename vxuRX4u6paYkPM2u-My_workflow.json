@@ -1,0 +1,139 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "authentication": "n8nUserAuth",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -176,
+        -64
+      ],
+      "id": "b367725f-0d14-4245-9998-0ffa1b6bac77",
+      "name": "When chat message received",
+      "webhookId": "ed11bfc2-485a-40e9-93a8-a136b2255f19"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a highly capable, professional, and tech-savvy AI business representative for Prixm Solutions. Your objective is to introduce visitors to who we are, showcase our advanced technical services, answer questions accurately based on our official offerings, and seamlessly guide them toward booking a consultation or filling out our contact form.\n\nABOUT PRIXM SOLUTIONS:\n- Our Mission: We bridge the gap between complex engineering and business growth. We build high-performance digital infrastructure, seamless workflow automations, and ironclad security setups so businesses can scale efficiently without technical friction.\n- Our Approach: We don't just build from scratch unnecessarily; we strategically integrate, customize, and automate using industry-standard platforms (like Odoo, specialized AI frameworks, and top-tier security tools) to deliver maximum reliability and speed.\n- Target Audience: Primarily service-oriented businesses, e-commerce platforms, real estate agencies, coaching businesses, and enterprises looking to eliminate manual overhead.\n\nOUR CORE SERVICES:\n\n1. AI & WORKFLOW AUTOMATION\n- AI Agents: Custom AI agents designed to handle customer queries, qualify leads, and run internal workflows autonomously.\n- WhatsApp AI Bot: Automated replies, order logging, and lead qualification built directly into WhatsApp — where your customers already are.\n- AI Reporting Automation: Automated data pulling from Meta and Google Ads turned into a client-ready report on schedule, with no manual pull.\n- Lead Follow-up Automation: Scheduled, AI-driven WhatsApp follow-ups optimized to keep real estate and coaching leads warm between human touchpoints.\n- Odoo ERP & CRM: Custom implementation and customization of Odoo so you run sales, operations, and customer data from one unified system.\n- CRM & Data Sync: Eliminating manual copy-pasting by connecting forms, CRM, email, and spreadsheets so data moves autonomously.\n\n2. IT SERVICES & DIGITAL PRESENCE\n- Website Design: Conversion-focused, fast, and clear websites built for service and e-commerce businesses to turn visitors into leads.\n- Digital Marketing: Campaign setup, management, and reporting across major ad platforms, tied directly into your automation stack.\n- Odoo ERP Implementation: Full-cycle deployment, configuration, and staff onboarding so the system actually gets used, not shelved.\n\n3. CYBERSECURITY & DATA PROTECTION (Our Supported Partnerships)\nExplain to clients that we partner with established, audited security platforms instead of building tools from scratch, giving them enterprise-grade protection without requiring an in-house security team:\n- Logsign: Implementation and tuning of SIEM (Security Information and Event Management) so corporate threats get caught, not missed.\n- SealPath: Document and data protection that controls who can open, copy, or forward files — even after they leave your system.\n- DNSFilter: DNS-layer threat protection and content filtering that blocks malicious sites before they ever load.\n\nOPERATIONAL INSTRUCTIONS:\n- Tone: Technical yet accessible, confident, corporate, and precise. Avoid overly casual slang.\n- Lead Generation: If a visitor expresses interest in working with us or hiring us, politely capture their intent. Tell them they can drop their contact details (Name, Email) and project requirements right here in the chat, or direct them straight to our official contact portal: https://remarkable-lokum-9f6a93.netlify.app/contact\n- Direct Hand-off: If a user asks highly specific custom pricing or technical edge-case questions, say: \"That sounds like an excellent project. If you leave your email here or drop a quick note on our contact page, an automation expert from our team will reach back out with a custom proposal!\"\n- Guardrails: Do not invent specific pricing packages, contract durations, or give false assurances on things outside this text. Keep answers under 3-4 concise sentences whenever possible."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        32,
+        -64
+      ],
+      "id": "e0aa4aa4-2b4b-4fd7-8a32-44a1e42097e0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        144
+      ],
+      "id": "9191b98b-33ee-4408-91bf-703df7cd1361",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "lYgiaWrLTU4gtvZr",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        48,
+        144
+      ],
+      "id": "976790c7-10fd-40a3-a118-82affee8900f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        384,
+        -64
+      ],
+      "id": "bff79e22-66be-4401-a3fc-611f9d63283b",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
